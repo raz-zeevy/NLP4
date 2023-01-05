@@ -6,13 +6,12 @@ import nltk
 # nltk.download()
 from nltk.corpus import dependency_treebank
 import numpy as np
-import pickle
 
 from typing import Tuple
 
 from Chu_Liu_Edmonds_algorithm import min_spanning_arborescence_nx
 from arc import Arc
-
+#!/bin/sh
 NODE_TAG = 'tag'
 NODE_WORD = 'lemma'
 NODE_DEPS = 'deps'
@@ -104,10 +103,9 @@ class MSTParser:
     def eval(self, test_parsed_sentences):
         # evaluate the model accuracy
         acc_count = 0
-        gold_standart_trees = dependency_treebank.parsed_sents()
         for sentence in test_parsed_sentences:
             pred_tree = self.predict(sentence)
-            gold_tree = gold_standart_trees.pop(0)
+            gold_tree = sentence
             for tail_index in pred_tree:
                 head_index = pred_tree[tail_index].head
                 dep_itr = gold_tree.nodes[head_index][NODE_DEPS].values()
@@ -192,9 +190,9 @@ if __name__ == '__main__':
     test_len = None
     if len(args) == 2:
         n = int(args[1])
-        parser.train(dependency_treebank.parsed_sents()[:n], epochs=epochs)
+        parser.train(dependency_treebank.parsed_sents()[:100], epochs=epochs)
         print("Accuracy: "+str(parser.eval(dependency_treebank.parsed_sents()[
-                                           :n])))
+                                           100:150])))
         test_len = n
     else:
         train_portion = int((len(parsed_sents) * 0.9) // 10)
